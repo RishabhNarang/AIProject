@@ -11,13 +11,13 @@ class StateClass:
         self.turn = 0
         self.state = np.array([[None, None, None], [None, None, None], [None, None, None], [None, None, None]])
         self.TerminalPoints = TerminalPoints
-        self.pieces = {1: {}, 0: {}}
+        self.pieces = {1: set(), 0: set()}
 
 
     def getState(self, action, position):
         newstate = deepcopy(self)
         if action == 'DiagonalLeft':
-            if self.turn[-1]:
+            if self.turn:
 
                 newstate.pieces[newstate.turn].add((position[0]-1, position[1]-1))
                 newstate.pieces[newstate.turn].remove((position[0], position[1]))
@@ -34,8 +34,6 @@ class StateClass:
                 newstate.state[position[0], position[1]] = None
                 newstate.turn = 1
                 self.turn = 1
-                newstate.pieces[newstate.turn].append()
-
 
         if action == 'DiagonalRight':
             if self.turn:
