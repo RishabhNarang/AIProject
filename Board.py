@@ -1,5 +1,10 @@
 import tkinter as tk
 from PIL import Image, ImageTk
+
+from GameController import GameController
+from StateClass import StateClass
+
+
 class GameBoard(tk.Frame):
     def __init__(self, parent, rows=4, columns=3, size=64, color1="white", color2="white"):
         '''size is the size of a square, in pixels'''
@@ -56,7 +61,6 @@ class GameBoard(tk.Frame):
         self.canvas.tag_raise("piece")
         self.canvas.tag_lower("square")
 
-
 # image comes from the silk icon set which is under a Creative Commons
 # license. For more information see http://www.famfamfam.com/lab/icons/silk/
 imagedata = '''
@@ -87,14 +91,19 @@ if __name__ == "__main__":
     root = tk.Tk()
     board = GameBoard(root)
     board.pack(side="top", fill="both", expand="true", padx=4, pady=4)
-    gif1 = tk.PhotoImage(file='accept.png')
-
-    # put gif image on canvas
-    # pic's upper left corner (NW) on the canvas is at x=50 y=10
-    canvas.create_image(50, 10, image=gif1, anchor=NW)
-
-    root.configure(bg='red')
-    player1 = tk.PhotoImage('accept.png')
+    player1_img = tk.PhotoImage(file='accept.png')
+    player2_img = tk.PhotoImage(file='anchor.png')
     #img = ImageTk.PhotoImage(Image.open("accept.png"))
-    board.addpiece("player1", player1, 0,0)
+    board.addpiece("player1", player1_img, 0,0)
+    board.addpiece("player2",player2_img,0,1)
+    init_state = StateClass(10)
+    init_state.turn =1
+    gameControl = GameController()
+    actions = gameControl.ACTIONS(init_state)
+    #next_state = init_state.getState('Insert',[3,0])
+    another_state = init_state.getState('Insert',[3,1])
+
+    for pos in another_state.pieces[1]:
+        board.placepiece("player1",pos[0],pos[1])
+    print(actions)
     root.mainloop()

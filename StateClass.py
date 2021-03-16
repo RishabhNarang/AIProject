@@ -18,7 +18,6 @@ class StateClass:
 
     def getState(self, action, position):
         newState = deepcopy(self)
-        # TODO: Update scores
         if action == 'DiagonalLeft':
             if self.turn:
                 if position[0] - 1 == -1:
@@ -150,4 +149,4 @@ class StateClass:
                 newState.state[position[0], position[1]] = None
                 newState.turn, self.turn = 1, 1
 
-        return
+        return newState

@@ -79,3 +79,6 @@ class GameController():
             #TODO Add the same logic for human player (0)
             x=2
         return possible_actions
+
+    def isActionApplicable(self,action, position):
+        return True
