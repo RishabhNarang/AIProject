@@ -80,3 +80,5 @@ class GameController():
             x=2
         return possible_actions
 
+    def areNoMovesAvailable(self,state_object):
+        return False

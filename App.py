@@ -4,47 +4,73 @@ import tkinter as tk
 from GameController import GameController
 from StateClass import StateClass
 
-
 if __name__ == "__main__":
-    players = {0: 'Human', 1 : "AI"}
-    #root = tk.Tk()
-    init_state = StateClass(10)
+    players = {0: 'Human', 1: "AI"}
+    # root = tk.Tk()
+    state = StateClass(10)
     gameControl = GameController()
-    possibleActions = gameControl.ACTIONS(init_state)
-    print("The actions available are : Insert, DiagonalLeft, DiagonalRight, JumpOverOne, JumpOverTwo, JumpOverThree, Attack")
-    action =''
-    position = [-1,-1]
+    # possibleActions = gameControl.ACTIONS(state)
+    print(
+        "The actions available are : Insert, DiagonalLeft, DiagonalRight, JumpOverOne, JumpOverTwo, JumpOverThree, Attack")
+    action, pieceId = '', ''
+    position = [-1, -1]
+    isHumanInDeadlock = False
+    isAIInDeadlock = False
     while True:
-        init_state.printState()
-        #board = GameBoard(root)
-       # board.pack(side="top", fill="both", expand="true", padx=4, pady=4)
-        while action not in gameControl.PossibleActions or not init_state.isActionApplicable(action,position):
-            action = input("Choose one action to do: ")
-            pieceId = input("Enter the piece id:")
-
-        if action == 'Insert':
-            positionY = -1
-            while not init_state.isPositionValid(positionY):
-                positionY = int(input("Input the column position of piece:"))
-            positionX = 3 if init_state.turn else 0
-            next_state, pieceRemoved = init_state.getState(action,pieceId, [positionX, positionY])
-            #TODO change images
-            #player1_img = tk.PhotoImage(file='accept.png')
-            #board.addpiece(pieceId,player1_img,0,positionY)
+        state.printState()
+        if gameControl.areNoMovesAvailable(state):
+            next_state = state.changeTurnsOnlyAndGetNextState()
+            print("No moves available for you Human :D")
+            isHumanInDeadlock = True
+            break
         else:
-            #Need to check if it goes outside the board
-            next_state, pieceRemoved = init_state.getState(action, pieceId)
-            #piecePositionAfterAction = next_state.getPiecePosition(pieceId)
-            #board.placepiece(pieceId,piecePositionAfterAction[0], piecePositionAfterAction[1])
-            #if pieceRemoved is not None:
-                #board.removePiece(pieceRemoved)
+            isHumanInDeadlock = False
+            while True:
+                action = input("Choose one action to do: ")
+                pieceId = input("Enter the piece id:")
+
+                if action == 'Insert':
+                    positionY = -1
+                    while not state.isPositionValid(positionY):
+                        positionY = int(input("Input the column position of piece:"))
+                    if state.isPiecePossibleToMove(action, pieceId, positionY):
+                        next_state, pieceRemoved = state.getState(action, pieceId, positionY)
+                        break
+                    else:
+                        print("Cannot Insert at the specified position. Piece already exists!")
+                        continue
+                    break
+                    # TODO change images
+                    # player1_img = tk.PhotoImage(file='accept.png')
+                    # board.addpiece(pieceId,player1_img,0,positionY)
+                else:
+                    if not state.isActionNameAndPieceIdValid(action, pieceId):
+                        continue
+                    if state.isPiecePossibleToMove(action, pieceId):
+                        next_state, pieceRemoved = state.getState(action, pieceId)
+                        break
+                    else:
+                        print("The piece is not possible to move with the given action. Choose another action/piece.")
+                        continue
+
+        # AI's turn now
         action = ''
-        init_state = next_state
-    #Run minimax algo with next_state as the initial state for the AI
-    #Returns the best action found
-    action_found = ''
-    root.mainloop()
-    init_state = next_state.getState(action_found, position)
+        state = next_state
+        if gameControl.areNoMovesAvailable(state):
+            next_state = state.changeTurnsOnlyAndGetNextState()
+            print("No moves available for AI ")
+            isAIInDeadlock = True
+        else:
+            isAIInDeadlock = False
+            # Run minimax algo with next_state as the initial state for the AI
+            # Returns the best action found
+            action_found = ''
 
-    #Repeat until someone scores Max points
+            next_state = state.getState(action_found, position)
 
+        # Check for deadlock of the game
+        if isHumanInDeadlock and isAIInDeadlock:
+            print("Game ended! No more moves available for either player..")
+            break
+        state = next_state
+    # Repeat until someone scores Max points
