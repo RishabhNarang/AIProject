@@ -80,5 +80,3 @@ class GameController():
             x=2
         return possible_actions
 
-    def isActionApplicable(self,action, position):
-        return True

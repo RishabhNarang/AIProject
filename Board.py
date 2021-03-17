@@ -40,6 +40,8 @@ class GameBoard(tk.Frame):
         y0 = (row * self.size) + int(self.size/2)
         self.canvas.coords(name, x0, y0)
 
+    def removePiece(self, name):
+        return
     def refresh(self, event):
         '''Redraw the board, possibly in response to window being resized'''
         xsize = int((event.width-1) / self.columns)
