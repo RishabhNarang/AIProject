@@ -49,8 +49,8 @@ class StateClass:
                     newState.pieces[id] = None
                     pieceRemoved = id
                 else:
-                    newState.pieces[id] = [position[0] + 1, position[1] - 1]
-                    newState.state[position[0] + 1, position[1] - 1] = self.turn
+                    newState.pieces[id] = [position[0] + 1, position[1] + 1]
+                    newState.state[position[0] + 1, position[1] + 1] = self.turn
                 newState.state[position[0], position[1]] = None
                 newState.turn = 1
                 self.turn = 1
@@ -73,8 +73,8 @@ class StateClass:
                     newState.pieces[id] = None
                     pieceRemoved = id
                 else:
-                    newState.pieces[id] = [position[0] + 1, position[1] + 1]
-                    newState.state[position[0] + 1, position[1] + 1] = self.turn
+                    newState.pieces[id] = [position[0] + 1, position[1] - 1]
+                    newState.state[position[0] + 1, position[1] - 1] = self.turn
                 newState.state[position[0], position[1]] = None
                 newState.turn = 1
                 self.turn = 1
@@ -186,6 +186,8 @@ class StateClass:
 
     def isPiecePossibleToMove(self, action, pieceId, insertColPosition=None):
         current_position = self.pieces[pieceId]
+        if action != 'Insert' and current_position is None:
+            return False
         if action == 'DiagonalLeft':
             if self.turn:
                 # Piece can always go out of board if it is one step away from going out of board

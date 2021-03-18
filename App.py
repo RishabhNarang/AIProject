@@ -26,6 +26,7 @@ if __name__ == "__main__":
         else:
             isHumanInDeadlock = False
             while True:
+                state.printState()
                 action = input("Choose one action to do: ")
                 pieceId = input("Enter the piece id:")
 
@@ -35,11 +36,11 @@ if __name__ == "__main__":
                         positionY = int(input("Input the column position of piece:"))
                     if state.isPiecePossibleToMove(action, pieceId, positionY):
                         next_state, pieceRemoved = state.getState(action, pieceId, positionY)
-                        break
+                        #break
                     else:
                         print("Cannot Insert at the specified position. Piece already exists!")
                         continue
-                    break
+                    #break
                     # TODO change images
                     # player1_img = tk.PhotoImage(file='accept.png')
                     # board.addpiece(pieceId,player1_img,0,positionY)
@@ -48,11 +49,11 @@ if __name__ == "__main__":
                         continue
                     if state.isPiecePossibleToMove(action, pieceId):
                         next_state, pieceRemoved = state.getState(action, pieceId)
-                        break
+                        #break
                     else:
                         print("The piece is not possible to move with the given action. Choose another action/piece.")
                         continue
-
+                state = next_state
         # AI's turn now
         action = ''
         state = next_state
