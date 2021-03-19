@@ -2,12 +2,13 @@ from Board import GameBoard
 import tkinter as tk
 
 from GameController import GameController
+from MiniMax import MiniMax
 from StateClass import StateClass
 
 if __name__ == "__main__":
     players = {0: 'Human', 1: "AI"}
     # root = tk.Tk()
-    state = StateClass(10)
+    state = StateClass(1)
     gameControl = GameController()
     # possibleActions = gameControl.ACTIONS(state)
     print(
@@ -22,7 +23,7 @@ if __name__ == "__main__":
             next_state = state.changeTurnsOnlyAndGetNextState()
             print("No moves available for you Human :D")
             isHumanInDeadlock = True
-            break
+            #break
         else:
             isHumanInDeadlock = False
             while True:
@@ -36,7 +37,7 @@ if __name__ == "__main__":
                         positionY = int(input("Input the column position of piece:"))
                     if state.isPiecePossibleToMove(action, pieceId, positionY):
                         next_state, pieceRemoved = state.getState(action, pieceId, positionY)
-                        #break
+                        break
                     else:
                         print("Cannot Insert at the specified position. Piece already exists!")
                         continue
@@ -49,11 +50,10 @@ if __name__ == "__main__":
                         continue
                     if state.isPiecePossibleToMove(action, pieceId):
                         next_state, pieceRemoved = state.getState(action, pieceId)
-                        #break
+                        break
                     else:
                         print("The piece is not possible to move with the given action. Choose another action/piece.")
                         continue
-                state = next_state
         # AI's turn now
         action = ''
         state = next_state
@@ -66,8 +66,9 @@ if __name__ == "__main__":
             # Run minimax algo with next_state as the initial state for the AI
             # Returns the best action found
             action_found = ''
-
-            next_state = state.getState(action_found, position)
+            AI = MiniMax()
+            actionFound, pieceId, insertPos = AI.Alpha_Beta_Search(state)
+            next_state = state.getState(action_found, pieceId, insertPos)
 
         # Check for deadlock of the game
         if isHumanInDeadlock and isAIInDeadlock:

@@ -354,6 +354,8 @@ class StateClass:
                     else:
                         return False
         elif action == 'Insert':
+            if insertColPosition is None:
+                return False
             if self.turn:
                 return self.state[3, insertColPosition] is None
             else:
@@ -377,6 +379,14 @@ class StateClass:
 
     def isPositionValid(self, yPosition):
         return yPosition >= 0 and yPosition <= 2
+
+    def getPossibleInsertPosition(self):
+        yPositions = []
+        rowPos = 3 if self.turn else 0
+        for i in range(0,3):
+            if self.state[rowPos,i] is None:
+                yPositions.append(i)
+        return yPositions
 
     def printState(self):
         for i in range(0, 4):
