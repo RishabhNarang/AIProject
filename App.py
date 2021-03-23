@@ -36,7 +36,7 @@ if __name__ == "__main__":
                     while not state.isPositionValid(positionY):
                         positionY = int(input("Input the column position of piece:"))
                     if state.isPiecePossibleToMove(action, pieceId, positionY):
-                        next_state, pieceRemoved = state.getState(action, pieceId, positionY)
+                        next_state, pieceRemoved = state.RESULT(action, pieceId, positionY)
                         break
                     else:
                         print("Cannot Insert at the specified position. Piece already exists!")
@@ -49,7 +49,7 @@ if __name__ == "__main__":
                     if not state.isActionNameAndPieceIdValid(action, pieceId):
                         continue
                     if state.isPiecePossibleToMove(action, pieceId):
-                        next_state, pieceRemoved = state.getState(action, pieceId)
+                        next_state, pieceRemoved = state.RESULT(action, pieceId)
                         break
                     else:
                         print("The piece is not possible to move with the given action. Choose another action/piece.")
@@ -68,7 +68,7 @@ if __name__ == "__main__":
             action_found = ''
             AI = MiniMax()
             actionFound, pieceId, insertPos = AI.Alpha_Beta_Search(state)
-            next_state = state.getState(action_found, pieceId, insertPos)
+            next_state = state.RESULT(action_found, pieceId, insertPos)
 
         # Check for deadlock of the game
         if isHumanInDeadlock and isAIInDeadlock:

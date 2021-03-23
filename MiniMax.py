@@ -25,7 +25,7 @@ class MiniMax:
         v = np.NINF
         gameControl = GameController()
         for (action, pieceId, insertPos) in gameControl.ACTIONS(state):
-            nextState,pieceRemoved = state.getState(action, pieceId, insertPos)
+            nextState,pieceRemoved = state.RESULT(action, pieceId, insertPos)
             minValue, minAction, minPiece, minInsertPos = self.Min_Value(nextState,depth-1, alpha, beta)
             if minValue > beta:
                 return minValue, action, minPiece, minInsertPos
@@ -43,7 +43,7 @@ class MiniMax:
         v = np.NINF
         gameControl = GameController()
         for (action, pieceId, insertPos) in gameControl.ACTIONS(state):
-            nextState, pieceRemoved = state.getState(action, pieceId, insertPos)
+            nextState, pieceRemoved = state.RESULT(action, pieceId, insertPos)
             maxValue, maxAction, maxPiece, maxInsertPos = self.Max_Value(nextState,depth-1, alpha, beta)
             if maxValue < alpha:
                 return maxValue, action, maxPiece, maxInsertPos
@@ -65,7 +65,7 @@ class MiniMax:
         v = np.NINF
         gameControl = GameController()
         for (action, pieceId, insertPos) in gameControl.ACTIONS(state):
-            nextState,pieceRemoved = state.getState(action, pieceId, insertPos)
+            nextState,pieceRemoved = state.RESULT(action, pieceId, insertPos)
             minValue, minAction, minPiece, minInsertPos = self.Min_Value(nextState, alpha, beta)
             if minValue > beta:
                 return minValue, action, minPiece, minInsertPos
@@ -98,7 +98,7 @@ class MiniMax:
         v = np.NINF
         gameControl = GameController()
         for (action, pieceId, insertPos) in gameControl.ACTIONS(state):
-            nextState, pieceRemoved = state.getState(action, pieceId, insertPos)
+            nextState, pieceRemoved = state.RESULT(action, pieceId, insertPos)
             maxValue, maxAction, maxPiece, maxInsertPos = self.Max_Value(nextState,alpha, beta)
             if maxValue < alpha:
                 return maxValue, action, maxPiece, maxInsertPos
