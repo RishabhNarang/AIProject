@@ -26,7 +26,7 @@ class StateClass:
         self.score = {1: 0, 0: 0}
 
     # Only for insert action, we use the position argument
-    def getState(self, action, id, insertYPosition=None):
+    def RESULT(self, action, id, insertYPosition=None):
         newState = deepcopy(self)
         position = self.pieces[id]
         pieceRemoved = None
@@ -377,6 +377,7 @@ class StateClass:
             if self.state[rowPos,i] is None:
                 yPositions.append(i)
         return yPositions
+
 
     def printState(self):
         for i in range(0, 4):

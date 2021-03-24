@@ -102,8 +102,8 @@ if __name__ == "__main__":
     init_state.turn =1
     gameControl = GameController()
     actions = gameControl.ACTIONS(init_state)
-    #next_state = init_state.getState('Insert',[3,0])
-    another_state = init_state.getState('Insert',[3,1])
+    #next_state = init_state.RESULT('Insert',[3,0])
+    another_state = init_state.RESULT('Insert',[3,1])
 
     for pos in another_state.pieces[1]:
         board.placepiece("player1",pos[0],pos[1])

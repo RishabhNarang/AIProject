@@ -25,8 +25,8 @@ class MiniMax:
         v = float('-inf')
         gameControl = GameController()
         for (action, pieceId, insertPos) in gameControl.ACTIONS(state):
-            nextState, pieceRemoved = state.getState(action, pieceId, insertPos)
-            minValue, minAction, minPiece, minInsertPos = self.MinValue(nextState, depth - 1, alpha, beta)
+            nextState,pieceRemoved = state.RESULT(action, pieceId, insertPos)
+            minValue, minAction, minPiece, minInsertPos = self.MinValue(nextState,depth-1, alpha, beta)
             if minValue > beta:
                 return minValue, action, minPiece, minInsertPos
             if minValue > v:
@@ -41,8 +41,8 @@ class MiniMax:
         v = float('inf')
         gameControl = GameController()
         for (action, pieceId, insertPos) in gameControl.ACTIONS(state):
-            nextState, pieceRemoved = state.getState(action, pieceId, insertPos)
-            maxValue, maxAction, maxPiece, maxInsertPos = self.MaxValue(nextState, depth - 1, alpha, beta)
+            nextState, pieceRemoved = state.RESULT(action, pieceId, insertPos)
+            maxValue, maxAction, maxPiece, maxInsertPos = self.MaxValue(nextState,depth-1, alpha, beta)
             if maxValue < alpha:
                 return maxValue, action, maxPiece, maxInsertPos
             if maxValue < v:
@@ -56,7 +56,7 @@ class MiniMax:
         beta = float('inf')
         resultingAction, resultingPiece, resultingInsertPos = None, None, None
         for (action, pieceId, insertPos) in gameControl.ACTIONS(state):
-            child_node, piece_removed = state.getState(action, pieceId, insertPos)
+            child_node, piece_removed = state.RESULT(action, pieceId, insertPos)
             value = self.Min_Value(child_node, 2, best_val, beta)
             if value > best_val:
                 best_val = value
@@ -70,7 +70,7 @@ class MiniMax:
         v = float('-inf')
         gameControl = GameController()
         for (action, pieceId, insertPos) in gameControl.ACTIONS(state):
-            nextState, pieceRemoved = state.getState(action, pieceId, insertPos)
+            nextState, pieceRemoved = state.RESULT(action, pieceId, insertPos)
             value = self.Min_Value(nextState, depth - 1, alpha, beta)
             if value > beta:
                 return value
@@ -83,12 +83,13 @@ class MiniMax:
         value = float('inf')
         gameControl = GameController()
         for (action, pieceId, insertPos) in gameControl.ACTIONS(state):
-            nextState, pieceRemoved = state.getState(action, pieceId, insertPos)
+            nextState, pieceRemoved = state.RESULT(action, pieceId, insertPos)
             value = self.Max_Value(nextState, depth - 1, alpha, beta)
             if value < alpha:
                 return value
             beta = min(beta, value)
         return value
+
 
     def Terminal_Test(self, state):
         return state.score[state.turn] == state.TerminalPoints
