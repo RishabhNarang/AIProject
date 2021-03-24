@@ -8,7 +8,7 @@ from StateClass import StateClass
 if __name__ == "__main__":
     players = {0: 'Human', 1: "AI"}
     # root = tk.Tk()
-    state = StateClass(5)
+    state = StateClass(2)
     gameControl = GameController()
     # possibleActions = gameControl.ACTIONS(state)
     print(
@@ -17,8 +17,11 @@ if __name__ == "__main__":
     position = [-1, -1]
     isHumanInDeadlock = False
     isAIInDeadlock = False
+    lastMoveMadeBy = 0 #(Human)
     while True:
-        state.printState()
+        #print("Human score =  " + str(state.score[0]))
+        #print("AI score =  " + str(state.score[1]))
+        #state.printState()
         if gameControl.areNoMovesAvailable(state):
             next_state = state.changeTurnsOnlyAndGetNextState()
             print("No moves available for you Human :D")
@@ -37,6 +40,11 @@ if __name__ == "__main__":
                         positionY = int(input("Input the column position of piece:"))
                     if state.isPiecePossibleToMove(action, pieceId, positionY):
                         next_state, pieceRemoved = state.RESULT(action, pieceId, positionY)
+                        lastMoveMadeBy = 0
+                        print("Human score =  " + str(next_state.score[0]))
+                        print("AI score =  " + str(next_state.score[1]))
+                        print("Human turn is finished")
+                        next_state.printState()
                         break
                     else:
                         print("Cannot Insert at the specified position. Piece already exists!")
@@ -50,6 +58,11 @@ if __name__ == "__main__":
                         continue
                     if state.isPiecePossibleToMove(action, pieceId):
                         next_state, pieceRemoved = state.RESULT(action, pieceId)
+                        lastMoveMadeBy = 0
+                        print("Human score =  " + str(next_state.score[0]))
+                        print("AI score =  " + str(next_state.score[1]))
+                        print("Human turn is finished")
+                        next_state.printState()
                         break
                     else:
                         print("The piece is not possible to move with the given action. Choose another action/piece.")
@@ -69,11 +82,20 @@ if __name__ == "__main__":
             AI = MiniMax()
             actionFound, pieceId, insertPos = AI.Alpha_Beta_Search(state)
             next_state,pieceRemoved = state.RESULT(actionFound, pieceId, insertPos)
+            lastMoveMadeBy = 1
+            print("Human score =  " + str(next_state.score[0]))
+            print("AI score =  " + str(next_state.score[1]))
+            print("AI turn is finished")
+            next_state.printState()
 
 
         # Check for deadlock of the game
         if isHumanInDeadlock and isAIInDeadlock:
-            print("Game ended! No more moves available for either player..")
-            break
+            if lastMoveMadeBy == 1:
+                print("Game ended! AI lost")
+                break
+            else:
+                print("Game ended! Human lost")
+                break
         state = next_state
     # Repeat until someone scores Max points

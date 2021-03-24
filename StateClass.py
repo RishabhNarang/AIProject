@@ -39,7 +39,7 @@ class StateClass:
         if action == 'DiagonalLeft':
             if self.turn:
                 if position[0] - 1 == -1:
-                    self.score[1] += 1
+                    newState.score[1] += 1
                     newState.pieces[id] = None
                     pieceRemoved = id
                 else:
@@ -50,7 +50,7 @@ class StateClass:
 
             else:
                 if position[0] + 1 == 4:
-                    self.score[0] += 1
+                    newState.score[0] += 1
                     newState.pieces[id] = None
                     pieceRemoved = id
                 else:
@@ -62,7 +62,7 @@ class StateClass:
         if action == 'DiagonalRight':
             if self.turn:
                 if position[0] - 1 == -1:
-                    self.score[1] += 1
+                    newState.score[1] += 1
                     newState.pieces[id] = None
                     pieceRemoved = id
                 else:
@@ -72,7 +72,7 @@ class StateClass:
                 newState.turn = 0
             else:
                 if position[0] + 1 == 4:
-                    self.score[0] += 1
+                    newState.score[0] += 1
                     newState.pieces[id] = None
                     pieceRemoved = id
                 else:
@@ -84,7 +84,7 @@ class StateClass:
         if action == 'JumpOverOne':
             if self.turn:
                 if position[0] - 2 == -1:
-                    self.score[1] += 1
+                    newState.score[1] += 1
                     newState.pieces[id] = None
                     pieceRemoved = id
                 else:
@@ -95,7 +95,7 @@ class StateClass:
 
             else:
                 if position[0] + 2 == 4:
-                    self.score[0] += 1
+                    newState.score[0] += 1
                     newState.pieces[id] = None
                     pieceRemoved = id
                 else:
@@ -107,7 +107,7 @@ class StateClass:
         if action == 'JumpOverTwo':
             if self.turn:
                 if position[0] - 3 == -1:
-                    self.score[1] += 1
+                    newState.score[1] += 1
                     newState.pieces[id] = None
                     pieceRemoved = id
                 else:
@@ -117,7 +117,7 @@ class StateClass:
                 newState.turn = 0
             else:
                 if position[0] + 3 == 4:
-                    self.score[0] += 1
+                    newState.score[0] += 1
                     newState.pieces[id] = None
                     pieceRemoved = id
                 else:
@@ -128,13 +128,13 @@ class StateClass:
 
         if action == 'JumpOverThree':
             if self.turn:
-                self.score[1] += 1
+                newState.score[1] += 1
                 newState.pieces[id] = None
                 pieceRemoved = id
                 newState.state[position[0], position[1]] = None
                 newState.turn = 0
             else:
-                self.score[0] += 1
+                newState.score[0] += 1
                 newState.pieces[id] = None
                 pieceRemoved = id
                 newState.state[position[0], position[1]] = None
@@ -168,7 +168,7 @@ class StateClass:
 
     def removePieceAt(self, position):
         for id, pos in self.pieces.items():
-            if pos[0] == position[0] and pos[1] == position[1]:
+            if pos is not None and pos[0] == position[0] and pos[1] == position[1]:
                 self.pieces[id] = None
                 return id
 
@@ -372,7 +372,7 @@ class StateClass:
     def changeTurnsOnlyAndGetNextState(self):
         newState = deepcopy(self)
         newState.turn = (self.turn + 1) % 2
-        return newState
+        return newState, None
 
     def isPositionValid(self, yPosition):
         return yPosition >= 0 and yPosition <= 2
@@ -397,3 +397,8 @@ class StateClass:
                     print(self.state[i, j], end=" ")
                     print("|", end=" ")
             print("")
+
+    def printScores(self):
+        print("Human score =  " + str(state.score[0]))
+        print("AI score =  " + str(state.score[1]))
+
