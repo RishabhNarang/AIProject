@@ -41,7 +41,6 @@ class StateClass:
                     newState.state[position[0] - 1, position[1] - 1] = self.turn
                 newState.state[position[0], position[1]] = None
                 newState.turn = 0
-                self.turn = 0
 
             else:
                 if position[0] + 1 == 4:
@@ -53,7 +52,6 @@ class StateClass:
                     newState.state[position[0] + 1, position[1] + 1] = self.turn
                 newState.state[position[0], position[1]] = None
                 newState.turn = 1
-                self.turn = 1
 
         if action == 'DiagonalRight':
             if self.turn:
@@ -66,7 +64,6 @@ class StateClass:
                     newState.state[position[0] - 1, position[1] + 1] = self.turn
                 newState.state[position[0], position[1]] = None
                 newState.turn = 0
-                self.turn = 0
             else:
                 if position[0] + 1 == 4:
                     self.score[0] += 1
@@ -77,7 +74,6 @@ class StateClass:
                     newState.state[position[0] + 1, position[1] - 1] = self.turn
                 newState.state[position[0], position[1]] = None
                 newState.turn = 1
-                self.turn = 1
 
         if action == 'JumpOverOne':
             if self.turn:
@@ -90,7 +86,6 @@ class StateClass:
                     newState.state[position[0] - 2, position[1]] = self.turn
                 newState.state[position[0], position[1]] = None
                 newState.turn = 0
-                self.turn = 0
 
             else:
                 if position[0] + 2 == 4:
@@ -102,7 +97,6 @@ class StateClass:
                     newState.state[position[0] + 2, position[1]] = self.turn
                 newState.state[position[0], position[1]] = None
                 newState.turn = 1
-                self.turn = 1
 
         if action == 'JumpOverTwo':
             if self.turn:
@@ -115,7 +109,6 @@ class StateClass:
                     newState.state[position[0] - 3, position[1]] = self.turn
                 newState.state[position[0], position[1]] = None
                 newState.turn = 0
-                self.turn = 0
             else:
                 if position[0] + 3 == 4:
                     self.score[0] += 1
@@ -126,7 +119,6 @@ class StateClass:
                     newState.state[position[0] + 3, position[1]] = self.turn
                 newState.state[position[0], position[1]] = None
                 newState.turn = 1
-                self.turn = 1
 
         if action == 'JumpOverThree':
             if self.turn:
@@ -135,38 +127,36 @@ class StateClass:
                 pieceRemoved = id
                 newState.state[position[0], position[1]] = None
                 newState.turn = 0
-                self.turn = 0
             else:
                 self.score[0] += 1
                 newState.pieces[id] = None
                 pieceRemoved = id
                 newState.state[position[0], position[1]] = None
                 newState.turn = 1
-                self.turn = 1
 
         if action == 'Insert':
             insertXPosition = 3 if self.turn else 0
             newState.pieces[id] = [insertXPosition, insertYPosition]
             newState.state[insertXPosition, insertYPosition] = self.turn
             if self.turn:
-                newState.turn, self.turn = 0, 0
+                newState.turn = 0
             else:
-                newState.turn, self.turn = 1, 1
+                newState.turn = 1
 
         if action == 'Attack':
             if self.turn:
-                newState.pieces[id] = [position[0] - 1, position[1]]
                 # Get the id of the piece in front and remove its position
                 pieceRemoved = self.removePieceAt([position[0] - 1, position[1]])
+                newState.pieces[id] = [position[0] - 1, position[1]]
                 newState.state[position[0] - 1, position[1]] = self.turn
                 newState.state[position[0], position[1]] = None
-                newState.turn, self.turn = 0, 0
+                newState.turn = 0
             else:
-                newState.pieces[id] = [position[0] + 1, position[1]]
                 pieceRemoved = self.removePieceAt([position[0] + 1, position[1]])
+                newState.pieces[id] = [position[0] + 1, position[1]]
                 newState.state[position[0] + 1, position[1]] = self.turn
                 newState.state[position[0], position[1]] = None
-                newState.turn, self.turn = 1, 1
+                newState.turn = 1
 
         return newState, pieceRemoved
 

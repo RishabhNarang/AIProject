@@ -8,7 +8,7 @@ from StateClass import StateClass
 if __name__ == "__main__":
     players = {0: 'Human', 1: "AI"}
     # root = tk.Tk()
-    state = StateClass(1)
+    state = StateClass(5)
     gameControl = GameController()
     # possibleActions = gameControl.ACTIONS(state)
     print(
@@ -27,7 +27,7 @@ if __name__ == "__main__":
         else:
             isHumanInDeadlock = False
             while True:
-                state.printState()
+                #state.printState()
                 action = input("Choose one action to do: ")
                 pieceId = input("Enter the piece id:")
 
@@ -65,10 +65,11 @@ if __name__ == "__main__":
             isAIInDeadlock = False
             # Run minimax algo with next_state as the initial state for the AI
             # Returns the best action found
-            action_found = ''
+            actionFound = ''
             AI = MiniMax()
             actionFound, pieceId, insertPos = AI.Alpha_Beta_Search(state)
-            next_state = state.getState(action_found, pieceId, insertPos)
+            #actionFound, pieceId, insertPos = AI.alpha_beta(state,1,float('-inf'),float('inf'))
+            next_state,pieceRemoved = state.getState(actionFound, pieceId, insertPos)
 
         # Check for deadlock of the game
         if isHumanInDeadlock and isAIInDeadlock:
