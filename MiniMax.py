@@ -57,7 +57,7 @@ class MiniMax:
         resultingAction, resultingPiece, resultingInsertPos = None, None, None
         for (action, pieceId, insertPos) in gameControl.ACTIONS(state):
             child_node, piece_removed = state.RESULT(action, pieceId, insertPos)
-            value = self.Min_Value(child_node, 2, best_val, beta)
+            value = self.Min_Value(child_node, 0, best_val, beta)
             if value > best_val:
                 best_val = value
                 resultingAction, resultingPiece, resultingInsertPos = action, pieceId, insertPos

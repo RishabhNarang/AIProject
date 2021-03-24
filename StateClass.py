@@ -11,6 +11,12 @@ class Piece:
         self.position = position
 
 
+def isHumanPiece(pieceId):
+    if pieceId in ['H1','H2', 'H3','H4']:
+        return True
+    return False
+
+
 class StateClass:
 
     def __init__(self, TerminalPoints):
@@ -146,13 +152,13 @@ class StateClass:
         if action == 'Attack':
             if self.turn:
                 # Get the id of the piece in front and remove its position
-                pieceRemoved = self.removePieceAt([position[0] - 1, position[1]])
+                pieceRemoved = newState.removePieceAt([position[0] - 1, position[1]])
                 newState.pieces[id] = [position[0] - 1, position[1]]
                 newState.state[position[0] - 1, position[1]] = self.turn
                 newState.state[position[0], position[1]] = None
                 newState.turn = 0
             else:
-                pieceRemoved = self.removePieceAt([position[0] + 1, position[1]])
+                pieceRemoved = newState.removePieceAt([position[0] + 1, position[1]])
                 newState.pieces[id] = [position[0] + 1, position[1]]
                 newState.state[position[0] + 1, position[1]] = self.turn
                 newState.state[position[0], position[1]] = None
@@ -161,7 +167,7 @@ class StateClass:
         return newState, pieceRemoved
 
     def removePieceAt(self, position):
-        for id, pos in self.pieces:
+        for id, pos in self.pieces.items():
             if pos[0] == position[0] and pos[1] == position[1]:
                 self.pieces[id] = None
                 return id
@@ -176,10 +182,11 @@ class StateClass:
 
     def isPiecePossibleToMove(self, action, pieceId, insertColPosition=None):
         current_position = self.pieces[pieceId]
+        isAIPiece = not isHumanPiece(pieceId)
         if action != 'Insert' and current_position is None:
             return False
         if action == 'DiagonalLeft':
-            if self.turn:
+            if isAIPiece:
                 # Piece can always go out of board if it is one step away from going out of board
                 if current_position[0] - 1 == -1:
                     return True
@@ -211,7 +218,7 @@ class StateClass:
                         return True
 
         elif action == 'DiagonalRight':
-            if self.turn:
+            if isAIPiece:
                 # Piece can always go out of board if it is one step away from going out of board
                 if current_position[0] - 1 == -1:
                     return True
@@ -243,18 +250,18 @@ class StateClass:
                         return True
 
         elif action == 'JumpOverOne':
-            if self.turn:
+            if isAIPiece:
                 if current_position[0] == 0:
                     # Jump over not possible if it is just one step away from going out of board
                     return False
                 elif current_position[0] == 1:
-                    if self.state[current_position[0] - 1, current_position[1]] == (self.turn + 1) % 2:
+                    if self.state[current_position[0] - 1, current_position[1]] == 0:
                         # Front piece is other player's piece and jump over takes you out of the board
                         return True
                     else:
                         return False
                 else:
-                    if (self.state[current_position[0] - 1, current_position[1]] == (self.turn + 1) % 2) and (
+                    if (self.state[current_position[0] - 1, current_position[1]] == 0) and (
                             self.state[current_position[0] - 2, current_position[1]] is None):
                         # Front piece is other player's piece and jump over to an empty position
                         return True
@@ -265,13 +272,13 @@ class StateClass:
                     # Jump over not possible if it is just one step away from going out of board
                     return False
                 elif current_position[0] == 2:
-                    if self.state[current_position[0] + 1, current_position[1]] == (self.turn + 1) % 2:
+                    if self.state[current_position[0] + 1, current_position[1]] == 1:
                         # Front piece is other player's piece and jump over takes you out of the board
                         return True
                     else:
                         return False
                 else:
-                    if (self.state[current_position[0] + 1, current_position[1]] == (self.turn + 1) % 2) and (
+                    if (self.state[current_position[0] + 1, current_position[1]] == 1) and (
                             self.state[current_position[0] + 2, current_position[1]] is None):
                         # Front piece is other player's piece and jump over to an empty position
                         return True
@@ -279,20 +286,20 @@ class StateClass:
                         return False
 
         elif action == 'JumpOverTwo':
-            if self.turn:
+            if isAIPiece:
                 if current_position[0] == 0 or current_position[0] == 1:
                     # JumpOverTwo not possible if it is just one/two steps away from going out of board
                     return False
                 elif current_position[0] == 2:
-                    if (self.state[current_position[0] - 1, current_position[1]] == (self.turn + 1) % 2) and (
-                            self.state[current_position[0] - 2, current_position[1]] == (self.turn + 1) % 2):
+                    if (self.state[current_position[0] - 1, current_position[1]] == 0) and (
+                            self.state[current_position[0] - 2, current_position[1]] == 0):
                         # Both Front pieces are other player's piece and jump over takes you out of the board
                         return True
                     else:
                         return False
                 else:
-                    if (self.state[current_position[0] - 1, current_position[1]] == (self.turn + 1) % 2) and (
-                            self.state[current_position[0] - 2, current_position[1]] == (self.turn + 1) % 2) and (
+                    if (self.state[current_position[0] - 1, current_position[1]] == 0) and (
+                            self.state[current_position[0] - 2, current_position[1]] == 0) and (
                             self.state[current_position[0] - 3, current_position[1]] is None):
                         # Both Front piece are other player's piece and jump over to an empty position
                         return True
@@ -303,15 +310,15 @@ class StateClass:
                     # JumpOverTwo not possible if it is just one/two steps away from going out of board
                     return False
                 elif current_position[0] == 1:
-                    if (self.state[current_position[0] + 1, current_position[1]] == (self.turn + 1) % 2) and (
-                            self.state[current_position[0] + 2, current_position[1]] == (self.turn + 1) % 2):
+                    if (self.state[current_position[0] + 1, current_position[1]] == 1) and (
+                            self.state[current_position[0] + 2, current_position[1]] == 1):
                         # Both Front pieces are other player's piece and jump over takes you out of the board
                         return True
                     else:
                         return False
                 else:
-                    if (self.state[current_position[0] + 1, current_position[1]] == (self.turn + 1) % 2) and (
-                            self.state[current_position[0] + 2, current_position[1]] == (self.turn + 1) % 2) and (
+                    if (self.state[current_position[0] + 1, current_position[1]] == 1) and (
+                            self.state[current_position[0] + 2, current_position[1]] == 1) and (
                             self.state[current_position[0] + 3, current_position[1]] is None):
                         # Both Front pieces are other player's piece and jump over to an empty position
                         return True
@@ -319,14 +326,14 @@ class StateClass:
                         return False
 
         elif action == 'JumpOverThree':
-            if self.turn:
+            if isAIPiece:
                 if current_position[0] != 3:
                     # JumpOverThree not possible if it is not in the first row.
                     return False
                 else:
-                    if (self.state[current_position[0] - 1, current_position[1]] == (self.turn + 1) % 2) and (
-                            self.state[current_position[0] - 2, current_position[1]] == (self.turn + 1) % 2) and (
-                            self.state[current_position[0] - 3, current_position[1]] == (self.turn + 1) % 2):
+                    if (self.state[current_position[0] - 1, current_position[1]] == 0) and (
+                            self.state[current_position[0] - 2, current_position[1]] == 0) and (
+                            self.state[current_position[0] - 3, current_position[1]] == 0):
                         # All Front piece are other player's pieces and jump out of the board
                         return True
                     else:
@@ -336,9 +343,9 @@ class StateClass:
                     # JumpOverThree not possible if it is not in the first row.
                     return False
                 else:
-                    if (self.state[current_position[0] + 1, current_position[1]] == (self.turn + 1) % 2) and (
-                            self.state[current_position[0] + 2, current_position[1]] == (self.turn + 1) % 2) and (
-                            self.state[current_position[0] + 3, current_position[1]] == (self.turn + 1) % 2):
+                    if (self.state[current_position[0] + 1, current_position[1]] == 1) and (
+                            self.state[current_position[0] + 2, current_position[1]] == 1) and (
+                            self.state[current_position[0] + 3, current_position[1]] == 1):
                         # All Front piece are other player's pieces and jump out of the board
                         return True
                     else:
@@ -346,21 +353,21 @@ class StateClass:
         elif action == 'Insert':
             if insertColPosition is None:
                 return False
-            if self.turn:
+            if isAIPiece:
                 return self.state[3, insertColPosition] is None
             else:
                 return self.state[0, insertColPosition] is None
         elif action == 'Attack':
-            if self.turn:
+            if isAIPiece:
                 if current_position[0] == 0:
                     return False
                 else:
-                    return self.state[current_position[0]-1, current_position[1]] == (self.turn+1) % 2
+                    return self.state[current_position[0]-1, current_position[1]] == 0
             else:
                 if current_position[0] == 3:
                     return False
                 else:
-                    return self.state[current_position[0]+1, current_position[1]] == (self.turn + 1) % 2
+                    return self.state[current_position[0]+1, current_position[1]] == 1
 
     def changeTurnsOnlyAndGetNextState(self):
         newState = deepcopy(self)

@@ -68,7 +68,7 @@ if __name__ == "__main__":
             actionFound = ''
             AI = MiniMax()
             actionFound, pieceId, insertPos = AI.Alpha_Beta_Search(state)
-            next_state = state.RESULT(actionFound, pieceId, insertPos)
+            next_state,pieceRemoved = state.RESULT(actionFound, pieceId, insertPos)
 
 
         # Check for deadlock of the game
