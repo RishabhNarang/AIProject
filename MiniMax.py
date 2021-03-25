@@ -57,7 +57,7 @@ class MiniMax:
         resultingAction, resultingPiece, resultingInsertPos = None, None, None
         for (action, pieceId, insertPos) in gameControl.ACTIONS(state):
             child_node, piece_removed = state.RESULT(action, pieceId, insertPos)
-            value = self.Min_Value(child_node, 8, best_val, beta)
+            value = self.Min_Value(child_node, 6, best_val, beta)
             print("The action " + str(action) + " gives us eval value = " + str(value) + "after executing action.")
             if value > best_val:
                 best_val = value
@@ -82,12 +82,10 @@ class MiniMax:
                 # print('The node at depth = ' + str(depth))
                 # nextState.printState()
                 break
-        #if noMovesAvailable:
-            #nextState, pieceRemoved = state.changeTurnsOnlyAndGetNextState()
-            #value = self.Min_Value(nextState, depth - 1, alpha, beta)
-            #if value > beta:
-                #return value
-            #alpha = max(alpha, v)
+        if noMovesAvailable:
+            nextState, pieceRemoved = state.changeTurnsOnlyAndGetNextState()
+            value = self.Min_Value(nextState, depth - 1, alpha, beta)
+            maxVal = max(maxVal, value)
         return maxVal
 
     def Min_Value(self, state, depth, alpha, beta):
@@ -104,25 +102,29 @@ class MiniMax:
             beta = min(beta, value)
             if beta <= alpha:
                 break
-        #if noMovesAvailable:
-         #   nextState, pieceRemoved = state.changeTurnsOnlyAndGetNextState()
-          #  value = self.Max_Value(nextState, depth - 1, alpha, beta)
-           # if value < alpha:
-            #    return value
-            #beta = min(beta, value)
+        if noMovesAvailable:
+            nextState, pieceRemoved = state.changeTurnsOnlyAndGetNextState()
+            value = self.Max_Value(nextState, depth - 1, alpha, beta)
+            minVal = min(minVal, value)
         return minVal
 
-    def Terminal_Test(self, state):
-        # TODO need to check deadlocks
-        return state.score[state.turn] == state.TerminalPoints
+    # Returns True/False,Winner
+    def Terminal_Test(self, state: StateClass):
+        isTerminalState, winner = state.isTerminalState()
+        return isTerminalState, winner
 
     def Utility(self, state):
         if state.score[1] == state.TerminalPoints:
-            return 1
+            return 1000
         elif state.score[0] == state.TerminalPoints:
-            return -1
+            return -1000
 
     def Eval(self, state: StateClass):
+        isTerminalState, winner = self.Terminal_Test(state)
+        if isTerminalState and winner == 1:
+            return 1000
+        elif isTerminalState and winner == 0:
+            return -1000
         eval_val_ai, eval_val_human = 0, 0
         # AI
         eval_val_ai += state.score[1] * 100
@@ -212,4 +214,5 @@ class MiniMax:
         return eval_val_ai - eval_val_human
 
     def Cut_Off_Test(self, state, depth):
-        return depth == 0 or self.Terminal_Test(state)
+        isTerminalState, winner = self.Terminal_Test(state)
+        return depth == 0 or isTerminalState

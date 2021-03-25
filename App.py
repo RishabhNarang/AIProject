@@ -15,22 +15,31 @@ if __name__ == "__main__":
         "The actions available are : Insert, DiagonalLeft, DiagonalRight, JumpOverOne, JumpOverTwo, JumpOverThree, Attack")
     action, pieceId = '', ''
     position = [-1, -1]
-    isHumanInDeadlock = False
-    isAIInDeadlock = False
-    lastMoveMadeBy = 0 #(Human)
-    while True:
+    #isHumanInDeadlock = False
+    #isAIInDeadlock = False
+    #lastMoveMadeBy = 0 #(Human)
+    winner = None
+    isGameEnded = False
+    while not isGameEnded:
         #print("Human score =  " + str(state.score[0]))
         #print("AI score =  " + str(state.score[1]))
         #state.printState()
         if gameControl.areNoMovesAvailable(state):
+            # To check if the game has gone in deadlock
+            isGameEnded, winner = state.isTerminalState()
+            if isGameEnded:
+                break
             next_state,pieceRemoved = state.changeTurnsOnlyAndGetNextState()
             print("No moves available for you Human :D")
-            isHumanInDeadlock = True
+            #isHumanInDeadlock = True
             #break
         else:
-            isHumanInDeadlock = False
+            #isHumanInDeadlock = False
             while True:
                 #state.printState()
+                isGameEnded, winner = state.isTerminalState()
+                if isGameEnded:
+                    break
                 action = input("Choose one action to do: ")
                 pieceId = input("Enter the piece id:")
 
@@ -49,10 +58,6 @@ if __name__ == "__main__":
                     else:
                         print("Cannot Insert at the specified position. Piece already exists!")
                         continue
-                    #break
-                    # TODO change images
-                    # player1_img = tk.PhotoImage(file='accept.png')
-                    # board.addpiece(pieceId,player1_img,0,positionY)
                 else:
                     if not state.isActionNameAndPieceIdValid(action, pieceId):
                         continue
@@ -71,13 +76,19 @@ if __name__ == "__main__":
         action = ''
         state = next_state
         if gameControl.areNoMovesAvailable(state):
+            isGameEnded, winner = state.isTerminalState()
+            if isGameEnded:
+                break
             next_state = state.changeTurnsOnlyAndGetNextState()
             print("No moves available for AI ")
-            isAIInDeadlock = True
+            #isAIInDeadlock = True
         else:
-            isAIInDeadlock = False
+            #isAIInDeadlock = False
             # Run minimax algo with next_state as the initial state for the AI
             # Returns the best action found
+            isGameEnded, winner = state.isTerminalState()
+            if isGameEnded:
+                break
             actionFound = ''
             AI = MiniMax()
             actionFound, pieceId, insertPos = AI.Alpha_Beta_Search(state)
@@ -87,15 +98,7 @@ if __name__ == "__main__":
             print("AI score =  " + str(next_state.score[1]))
             print("AI turn is finished")
             next_state.printState()
-
-
-        # Check for deadlock of the game
-        if isHumanInDeadlock and isAIInDeadlock:
-            if lastMoveMadeBy == 1:
-                print("Game ended! AI lost")
-                break
-            else:
-                print("Game ended! Human lost")
-                break
         state = next_state
-    # Repeat until someone scores Max points
+        # Repeat until someone scores Max points or game goes in deadlock
+    winPlayer = "AI" if winner == 1 else "Human"
+    print('The game has ended. Winner is: ' + winPlayer)

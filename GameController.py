@@ -85,7 +85,6 @@ class GameController():
                             possible_actions['Attack'].add((piece_position[0], piece_position[1]))
                             '''
         else:
-            #TODO Add the same logic for human player (0)
             # Possible Insert actions
             for pieceId in ['H1', 'H2', 'H3', 'H4']:
                 possibleInsertPos = state_object.getPossibleInsertPosition()

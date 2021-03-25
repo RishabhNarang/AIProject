@@ -183,8 +183,15 @@ class StateClass:
     def isPiecePossibleToMove(self, action, pieceId, insertColPosition=None):
         current_position = self.pieces[pieceId]
         isAIPiece = not isHumanPiece(pieceId)
+        # Boundary cases
+        ## If piece is not on board and actions other than insert can't be performed
         if action != 'Insert' and current_position is None:
             return False
+
+        ## If piece is already on board and insert action is called
+        if action == 'Insert' and current_position is not None:
+            return False
+
         if action == 'DiagonalLeft':
             if isAIPiece:
                 # Piece can always go out of board if it is one step away from going out of board
@@ -377,6 +384,9 @@ class StateClass:
     def isPositionValid(self, yPosition):
         return yPosition >= 0 and yPosition <= 2
 
+    def isPieceOnBoard(self, pieceId):
+        return self.pieces[pieceId] is not None
+
     def getPossibleInsertPosition(self):
         yPositions = []
         rowPos = 3 if self.turn else 0
@@ -385,6 +395,23 @@ class StateClass:
                 yPositions.append(i)
         return yPositions
 
+    def isLockedState(self):
+        gameControl = GameController()
+        nextState, pieceRemoved = self.changeTurnsOnlyAndGetNextState()
+        if gameControl.areNoMovesAvailable(self) and gameControl.areNoMovesAvailable(nextState):
+            return True, (self.turn + 1) % 2
+        return False, None
+
+    def isTerminalState(self):
+        isGameLocked, loser = self.isLockedState()
+        if isGameLocked:
+            return True, (loser + 1) % 2
+        elif self.score[0] == self.TerminalPoints:
+            return True, 0
+        elif self.score[1] == self.TerminalPoints:
+            return True, 1
+        else:
+            return False, None
 
     def printState(self):
         for i in range(0, 4):
@@ -397,8 +424,3 @@ class StateClass:
                     print(self.state[i, j], end=" ")
                     print("|", end=" ")
             print("")
-
-    def printScores(self):
-        print("Human score =  " + str(state.score[0]))
-        print("AI score =  " + str(state.score[1]))
-
