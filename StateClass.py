@@ -31,6 +31,17 @@ class StateClass:
         self.pieces = {'H1': None, 'H2': None, 'H3': None, 'H4': None, 'A1': None, 'A2': None, 'A3': None, 'A4': None}
         self.score = {1: 0, 0: 0}
 
+    def getOneHumanPieceNotOnBoard(self):
+        for pieceId in ['H1', 'H2', 'H3', 'H4']:
+            if not self.isPieceOnBoard(pieceId):
+                return pieceId
+        return None
+    def getOneAiPieceNotOnBoard(self):
+        for pieceId in ['A1', 'A2', 'A3', 'A4']:
+            if not self.isPieceOnBoard(pieceId):
+                return pieceId
+        return None
+
     # Only for insert action, we use the position argument
     def RESULT(self, action, id, insertYPosition=None):
         newState = deepcopy(self)
@@ -418,9 +429,13 @@ class StateClass:
             print("|", end=" ")
             for j in range(0, 3):
                 if self.state[i, j] == None:
-                    print(".", end=" ")
+                    print("..", end=" ")
                     print("|", end=" ")
                 else:
-                    print(self.state[i, j], end=" ")
-                    print("|", end=" ")
+                    for piece in self.pieces.keys():
+                        positionPiece = self.pieces[piece]
+                        if positionPiece is not None and positionPiece[0] == i and positionPiece[1] == j:
+                            print(piece, end=" ")
+                            print("|", end=" ")
+                            break
             print("")

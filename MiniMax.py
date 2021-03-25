@@ -1,4 +1,3 @@
-import numpy as np
 
 from GameController import GameController
 from StateClass import StateClass
@@ -12,44 +11,6 @@ class MiniMax:
         1: AI (AI goes up)
         '''
 
-    def alpha_beta(self, state_object, depth: int, alpha: float, beta: float):
-        if depth == 0 or self.Terminal_Test(state_object):
-            return self.Eval(state_object), None
-        return self.MaxValue(state_object, depth, alpha, beta)
-
-    def MaxValue(self, state, depth, alpha, beta):
-        maxAction = None
-        maxPiece = None
-        maxInsertPos = None
-
-        v = float('-inf')
-        gameControl = GameController()
-        for (action, pieceId, insertPos) in gameControl.ACTIONS(state):
-            nextState, pieceRemoved = state.RESULT(action, pieceId, insertPos)
-            minValue, minAction, minPiece, minInsertPos = self.MinValue(nextState, depth - 1, alpha, beta)
-            if minValue > beta:
-                return minValue, action, minPiece, minInsertPos
-            if minValue > v:
-                maxAction, v, maxPiece, maxInsertPos = action, minValue, minPiece, minInsertPos
-                alpha = max(alpha, v)
-        return v, maxAction, maxPiece, maxInsertPos
-
-    def MinValue(self, state, depth, alpha, beta):
-        minAction = None
-        minPiece = None
-        minInsertPos = None
-        v = float('inf')
-        gameControl = GameController()
-        for (action, pieceId, insertPos) in gameControl.ACTIONS(state):
-            nextState, pieceRemoved = state.RESULT(action, pieceId, insertPos)
-            maxValue, maxAction, maxPiece, maxInsertPos = self.MaxValue(nextState, depth - 1, alpha, beta)
-            if maxValue < alpha:
-                return maxValue, action, maxPiece, maxInsertPos
-            if maxValue < v:
-                minAction, v, minPiece, minInsertPos = action, maxValue, maxPiece, maxInsertPos
-                beta = min(beta, v)
-        return v, minAction, minPiece, minInsertPos
-
     def Alpha_Beta_Search(self, state):
         gameControl = GameController()
         best_val = float('-inf')
@@ -57,7 +18,7 @@ class MiniMax:
         resultingAction, resultingPiece, resultingInsertPos = None, None, None
         for (action, pieceId, insertPos) in gameControl.ACTIONS(state):
             child_node, piece_removed = state.RESULT(action, pieceId, insertPos)
-            value = self.Min_Value(child_node, 6, best_val, beta)
+            value = self.Min_Value(child_node, 8, best_val, beta)
             print("The action " + str(action) + " gives us eval value = " + str(value) + "after executing action.")
             if value > best_val:
                 best_val = value

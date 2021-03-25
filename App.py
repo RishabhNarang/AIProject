@@ -1,5 +1,3 @@
-from Board import GameBoard
-import tkinter as tk
 
 from GameController import GameController
 from MiniMax import MiniMax
