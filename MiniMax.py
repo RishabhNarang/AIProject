@@ -57,7 +57,7 @@ class MiniMax:
         resultingAction, resultingPiece, resultingInsertPos = None, None, None
         for (action, pieceId, insertPos) in gameControl.ACTIONS(state):
             child_node, piece_removed = state.RESULT(action, pieceId, insertPos)
-            value = self.Min_Value(child_node, 5, best_val, beta)
+            value = self.Min_Value(child_node, 8, best_val, beta)
             print("The action " + str(action) + " gives us eval value = " + str(value) + "after executing action.")
             if value > best_val:
                 best_val = value
@@ -68,8 +68,7 @@ class MiniMax:
     def Max_Value(self, state, depth, alpha, beta):
         if self.Cut_Off_Test(state, depth):
             return self.Eval(state)
-        v = float('-inf')
-        bestState = None
+        maxVal = float('-inf')
         gameControl = GameController()
         # TODO need to implement just switching of turns in case of no move available
         noMovesAvailable = True
@@ -77,43 +76,41 @@ class MiniMax:
             noMovesAvailable = False
             nextState, pieceRemoved = state.RESULT(action, pieceId, insertPos)
             value = self.Min_Value(nextState, depth - 1, alpha, beta)
-            if value > beta:
+            maxVal = max(maxVal, value)
+            alpha = max(alpha, value)
+            if beta < alpha:
                 # print('The node at depth = ' + str(depth))
                 # nextState.printState()
-                return value
-            alpha = max(alpha, v)
-        if noMovesAvailable:
-            nextState, pieceRemoved = state.changeTurnsOnlyAndGetNextState()
-            value = self.Min_Value(nextState, depth - 1, alpha, beta)
-            if value > beta:
-                return value
-            alpha = max(alpha, v)
-        return value
+                break
+        #if noMovesAvailable:
+            #nextState, pieceRemoved = state.changeTurnsOnlyAndGetNextState()
+            #value = self.Min_Value(nextState, depth - 1, alpha, beta)
+            #if value > beta:
+                #return value
+            #alpha = max(alpha, v)
+        return maxVal
 
     def Min_Value(self, state, depth, alpha, beta):
         if self.Cut_Off_Test(state, depth):
             return self.Eval(state)
-        bestState = None
-        value = float('inf')
+        minVal = float('inf')
         gameControl = GameController()
         noMovesAvailable = True
         for (action, pieceId, insertPos) in gameControl.ACTIONS(state):
             noMovesAvailable = False
             nextState, pieceRemoved = state.RESULT(action, pieceId, insertPos)
             value = self.Max_Value(nextState, depth - 1, alpha, beta)
-            bestState = nextState
-            if value < alpha:
-                # print('The node at depth = ' + str(depth))
-                # nextState.printState()
-                return value
+            minVal = min(minVal, value)
             beta = min(beta, value)
-        if noMovesAvailable:
-            nextState, pieceRemoved = state.changeTurnsOnlyAndGetNextState()
-            value = self.Max_Value(nextState, depth - 1, alpha, beta)
-            if value < alpha:
-                return value
-            beta = min(beta, value)
-        return value
+            if beta <= alpha:
+                break
+        #if noMovesAvailable:
+         #   nextState, pieceRemoved = state.changeTurnsOnlyAndGetNextState()
+          #  value = self.Max_Value(nextState, depth - 1, alpha, beta)
+           # if value < alpha:
+            #    return value
+            #beta = min(beta, value)
+        return minVal
 
     def Terminal_Test(self, state):
         # TODO need to check deadlocks

@@ -23,7 +23,7 @@ if __name__ == "__main__":
         #print("AI score =  " + str(state.score[1]))
         #state.printState()
         if gameControl.areNoMovesAvailable(state):
-            next_state = state.changeTurnsOnlyAndGetNextState()
+            next_state,pieceRemoved = state.changeTurnsOnlyAndGetNextState()
             print("No moves available for you Human :D")
             isHumanInDeadlock = True
             #break
