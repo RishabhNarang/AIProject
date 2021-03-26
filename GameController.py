@@ -1,9 +1,14 @@
+"""
+The gameController class keeps track of all possible actions and for the human and AI in the game.
+"""
+
 
 class GameController():
     def __init__(self):
         self.PossibleActions = ['Attack', 'Insert', 'JumpOverOne', 'JumpOverTwo', 'JumpOverThree', 'DiagonalLeft',
                                 'DiagonalRight']
 
+    # Checks possible actions and adds it to a list, and then returns the list with possible actions in the game
     def ACTIONS(self, state_object):
         """
         :param state_object: StateClass object
@@ -41,5 +46,6 @@ class GameController():
                             possible_actions.append((action, pieceId, None))
         return possible_actions
 
+    # Checks and returns if there are any available moves for current player
     def areNoMovesAvailable(self, state_object):
         return len(self.ACTIONS(state_object)) == 0
