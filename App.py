@@ -19,7 +19,10 @@ if __name__ == "__main__":
     gameControl = GameController()
     # possibleActions = gameControl.ACTIONS(state)
     print(
-        "The actions available are : Insert, DiagonalLeft, DiagonalRight, JumpOverOne, JumpOverTwo, JumpOverThree, Attack")
+        "--> The actions available in the game are : Insert, DiagonalLeft, DiagonalRight, JumpOverOne, JumpOverTwo, JumpOverThree, Attack")
+    print(
+        "--> You are given 4 pieces to use in the game: H1, H2, H3, H4. (The pieces name are case sensitive)")
+    state.printState()
     action, pieceId = '', ''
     position = [-1, -1]
 
@@ -46,9 +49,15 @@ if __name__ == "__main__":
                 pieceId = input("Enter the piece id:")
 
                 if action == 'Insert':
+                    while not state.isActionNameAndPieceIdValid(action, pieceId):
+                        print("The piece Id is not valid. Enter again!")
+                        pieceId = input("Enter the piece id:")
+                        continue
                     positionY = -1
                     while not state.isPositionValid(positionY):
                         positionY = int(input("Input the column position of piece:"))
+                        if not state.isPositionValid(positionY):
+                            print("Please enter one of the values: 0,1,2")
                     # If the piece can be inserted in the input position
                     if state.isPiecePossibleToMove(action, pieceId, positionY):
                         #return what is the state caused by the insertion
@@ -65,6 +74,7 @@ if __name__ == "__main__":
                 else:
                     #for invalid input just re-ask the user
                     if not state.isActionNameAndPieceIdValid(action, pieceId):
+                        print("The action name/ pieceId is not valid. Enter again!")
                         continue
                     #for any other action/piece combination if it is posible
                     #print the next state and the score
