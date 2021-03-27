@@ -15,6 +15,6 @@ Then we must install numpy.
 
 Now everything is set to run the project. In the project's directory type
 ```bash
-  $ python3 App.py --maxPoints <NumberOfPointsToBePlayed> --maxDepth <MaxDepthOfTheTree> #MaxDepthOfTheTree is by default 8
-  $ python App.py --maxPoints <NumberOfPointsToBePlayed> --maxDepth <MaxDepthOfTheTree> #if python2 is your version
+  $ python3 App.py --maxPoints=<NumberOfPointsToBePlayed> --maxDepth=<MaxDepthOfTheTree> #MaxDepthOfTheTree is by default 8
+  $ python App.py --maxPoints=<NumberOfPointsToBePlayed> --maxDepth=<MaxDepthOfTheTree> #if python2 is your version
 ```
