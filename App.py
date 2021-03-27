@@ -8,7 +8,8 @@ if __name__ == "__main__":
     #App.py --maxpoints <maxpoints> --maxdepth <maxdepth>
     players = {0: 'Human', 1: "AI"}
     #create a StateClass object with terminal points given as argument by the user
-    state = StateClass(2)
+    maxPoints =int(sys.argv[2])
+    state = StateClass(maxPoints)
     gameControl = GameController()
     # possibleActions = gameControl.ACTIONS(state)
     print(
