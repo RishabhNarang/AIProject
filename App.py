@@ -1,14 +1,20 @@
 from GameController import GameController
 from MiniMax import MiniMax
 from StateClass import StateClass
-import sys
+import sys,argparse
 
 if __name__ == "__main__":
     #in order to start the game:
     #App.py --maxpoints <maxpoints> --maxdepth <maxdepth>
     players = {0: 'Human', 1: "AI"}
     #create a StateClass object with terminal points given as argument by the user
-    maxPoints =int(sys.argv[2])
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--maxPoints', help='Maximum points needed to win')
+    parser.add_argument('--maxDepth', help='How deep the AI should search')
+    args = parser.parse_args()
+    maxPoints = int(args.maxPoints) if args.maxPoints is not None else 5
+    maxDepth = int(args.maxDepth) if args.maxDepth is not None else 8
     state = StateClass(maxPoints)
     gameControl = GameController()
     # possibleActions = gameControl.ACTIONS(state)
@@ -35,7 +41,7 @@ if __name__ == "__main__":
                 isGameEnded, winner = state.isTerminalState()
                 if isGameEnded:
                     break
-                #choose action and the piece to act
+                # choose action and the piece to act
                 action = input("Choose one action to do: ")
                 pieceId = input("Enter the piece id:")
 
@@ -43,7 +49,8 @@ if __name__ == "__main__":
                     positionY = -1
                     while not state.isPositionValid(positionY):
                         positionY = int(input("Input the column position of piece:"))
-                    if state.isPiecePossibleToMove(action, pieceId, positionY): #piece can be iserted in the input position 
+                    # If the piece can be inserted in the input position
+                    if state.isPiecePossibleToMove(action, pieceId, positionY):
                         #return what is the state caused by the insertion
                         next_state, pieceRemoved = state.RESULT(action, pieceId, positionY)
                         lastMoveMadeBy = 0
@@ -81,7 +88,6 @@ if __name__ == "__main__":
                 break
             next_state = state.changeTurnsOnlyAndGetNextState()
             print("No moves available for AI ")
-            #isAIInDeadlock = True
         else:
             isGameEnded, winner = state.isTerminalState()
             if isGameEnded:
@@ -91,7 +97,7 @@ if __name__ == "__main__":
             AI = MiniMax()
             #get what action to perform, which piece will perform it and if it is
             #an insert position specify where to insert it
-            actionFound, pieceId, insertPos = AI.Alpha_Beta_Search(state)
+            actionFound, pieceId, insertPos = AI.Alpha_Beta_Search(state,maxDepth)
             next_state,pieceRemoved = state.RESULT(actionFound, pieceId, insertPos)
             lastMoveMadeBy = 1
             print("Human score =  " + str(next_state.score[0]))

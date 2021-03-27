@@ -1,6 +1,5 @@
 from GameController import GameController
 from StateClass import StateClass
-import sys
 
 
 class MiniMax:
@@ -10,7 +9,7 @@ class MiniMax:
         Class to perform the minimax algorithm with alpha beta prunning
         '''
 
-    def Alpha_Beta_Search(self, state, gameControl=GameController(), alpha=float('-inf'), beta=float('inf')):
+    def Alpha_Beta_Search(self, state,maxDepth = 8, gameControl=GameController(), alpha=float('-inf'), beta=float('inf')):
         """
         :param state: Instance of the StateClass
         :param gemeControl: Instance of the GameController class
@@ -25,7 +24,6 @@ class MiniMax:
         """
 
         resultingAction, resultingPiece, resultingInsertPos = None, None, None
-        maxDepth = int(sys.argv[4])
         for (action, pieceId, insertPos) in gameControl.ACTIONS(state):
             child_node, piece_removed = state.RESULT(action, pieceId, insertPos)
             value = self.Min_Value(child_node, maxDepth, alpha, beta)
