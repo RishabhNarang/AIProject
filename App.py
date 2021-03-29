@@ -67,6 +67,7 @@ if __name__ == "__main__":
                         print("AI score =  " + str(next_state.score[1]))
                         print("Human turn is finished")
                         next_state.printState()
+                        print("")
                         break
                     else:
                         print("Cannot Insert at the specified position. Piece already exists!")
@@ -85,6 +86,7 @@ if __name__ == "__main__":
                         print("AI score =  " + str(next_state.score[1]))
                         print("Human turn is finished")
                         next_state.printState()
+                        print("")
                         break
                     else:
                         print("The piece is not possible to move with the given action. Choose another action/piece.")
@@ -108,12 +110,14 @@ if __name__ == "__main__":
             #get what action to perform, which piece will perform it and if it is
             #an insert position specify where to insert it
             actionFound, pieceId, insertPos = AI.Alpha_Beta_Search(state,maxDepth)
+            print("Action found by AI is :("+ actionFound +","+pieceId+","+(str(insertPos) if insertPos is not None else "") +")")
             next_state,pieceRemoved = state.RESULT(actionFound, pieceId, insertPos)
             lastMoveMadeBy = 1
             print("Human score =  " + str(next_state.score[0]))
             print("AI score =  " + str(next_state.score[1]))
             print("AI turn is finished")
             next_state.printState()
+            print("")
         state = next_state #current state becomes the state that AI's action caused
         # Repeat until someone scores Max points or game goes in deadlock
     winPlayer = "AI" if winner == 1 else "Human"

@@ -27,7 +27,7 @@ class MiniMax:
         for (action, pieceId, insertPos) in gameControl.ACTIONS(state):
             child_node, piece_removed = state.RESULT(action, pieceId, insertPos)
             value = self.Min_Value(child_node, maxDepth, alpha, beta)
-            print("The action " + str(action) + " gives us eval value = " + str(value) + "after executing action.")
+            #print("The action " + str(action) + " gives us eval value = " + str(value) + "after executing action.")
 
             if value > alpha:
                 alpha = value
